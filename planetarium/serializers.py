@@ -23,10 +23,11 @@ class PlanetaryDomeSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "rows", "seats_in_row", "capacity")
 
 
-class AstronomyShowListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AstronomyShow
-        fields = ("id", "title", "description")
+# class AstronomyShowListSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = AstronomyShow
+#         fields = ("id", "title", "description", "show_theme") many-to-many
+
 
 
 
