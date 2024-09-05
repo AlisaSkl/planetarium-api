@@ -2,7 +2,7 @@ from rest_framework import viewsets
 
 from .models import ShowTheme, PlanetaryDome, ShowSession, AstronomyShow
 from .serializers import ShowThemeSerializer, PlanetaryDomeSerializer, ShowSessionSerializer, AstronomyShowSerializer, \
-    ShowSessionListSerializer
+    ShowSessionListSerializer, AstronomyShowListSerializer
 
 
 class ShowThemeViewSet(viewsets.ModelViewSet):
@@ -34,5 +34,18 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
 
 class AstronomyShowViewSet(viewsets.ModelViewSet):
     queryset = AstronomyShow.objects.all()
-    serializer_class = AstronomyShowSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return AstronomyShowListSerializer
+
+        return AstronomyShowSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        if self.action == "list":
+            return queryset.prefetch_related("show_themes")
+
+        return queryset
+
 
