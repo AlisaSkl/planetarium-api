@@ -26,8 +26,7 @@ class PlanetaryDomeSerializer(serializers.ModelSerializer):
 class AstronomyShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = AstronomyShow
-        fields = ("id", "title", "description", "show_theme")
-# додати many-to-many
+        fields = ("id", "title", "description", "show_themes")
 
 
 class ShowSessionSerializer(serializers.ModelSerializer):
