@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.relations import SlugRelatedField
+
 from planetarium.models import (
     ShowTheme,
     AstronomyShow,
@@ -30,7 +32,16 @@ class AstronomyShowSerializer(serializers.ModelSerializer):
 
 
 class AstronomyShowListSerializer(AstronomyShowSerializer):
+    show_themes = SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field="name"
+    )
+
+
+class AstronomyShowRetrieveSerializer(AstronomyShowSerializer):
     show_themes = ShowThemeSerializer(many=True)
+
 
 
 class ShowSessionSerializer(serializers.ModelSerializer):
