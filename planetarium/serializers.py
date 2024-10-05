@@ -43,7 +43,6 @@ class AstronomyShowRetrieveSerializer(AstronomyShowSerializer):
     show_themes = ShowThemeSerializer(many=True)
 
 
-
 class ShowSessionSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -61,12 +60,15 @@ class ShowSessionRetrieveSerializer(ShowSessionSerializer):
     planetary_dome = PlanetaryDomeSerializer(read_only=True)
 
 
+class TickerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Ticket
+        fields = ("id", "row", "seat", "show_session")
 
 
+class ReservationSerializer(serializers.ModelSerializer):
 
-
-
-
-
-
-
+    class Meta:
+        model = Reservation
+        fields = ("id", "created_at", "user", "tickets")
