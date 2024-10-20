@@ -81,3 +81,5 @@ class ReservationSerializer(serializers.ModelSerializer):
         for ticket_data in tickets_data:
             Ticket.objects.create(reservation=reservation, **ticket_data)
         return reservation
+
+
