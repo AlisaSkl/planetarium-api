@@ -1,6 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
+from rest_framework.validators import UniqueTogetherValidator
 
 from planetarium.models import (
     ShowTheme,
@@ -66,6 +67,12 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = ("id", "row", "seat", "show_session")
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Ticket.objects.all(),
+                fields=["row", "seat", "show_session"]
+            )
+        ]
 
 
 class ReservationSerializer(serializers.ModelSerializer):
