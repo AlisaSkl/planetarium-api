@@ -63,10 +63,12 @@ class ShowSessionRetrieveSerializer(ShowSessionSerializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
+    astronomy_show = serializers.CharField(source="show_session.astronomy_show.title", read_only=True)
+    planetary_dome = serializers.CharField(source="show_session.planetary_dome.name", read_only=True)
 
     class Meta:
         model = Ticket
-        fields = ("id", "row", "seat", "show_session")
+        fields = ("id", "row", "seat", "show_session", "astronomy_show", "planetary_dome")
         validators = [
             UniqueTogetherValidator(
                 queryset=Ticket.objects.all(),
