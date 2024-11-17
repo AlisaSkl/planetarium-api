@@ -26,6 +26,11 @@ class PlanetaryDomeViewSet(viewsets.ModelViewSet):
 class ShowSessionViewSet(viewsets.ModelViewSet):
     queryset = ShowSession.objects.all().select_related()
 
+    @staticmethod
+    def _params_to_ints(query_string):
+        return [int(str_id) for str_id in query_string.split(",")]
+
+
     def get_serializer_class(self):
         if self.action == "list":
             return ShowSessionListSerializer
@@ -36,6 +41,13 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
+
+        astronomy_shows = self.request.query_params.get("astronomy_shows")
+
+        if astronomy_shows:
+            astronomy_shows = self._params_to_ints(astronomy_shows)
+            queryset = queryset.filter(astronomy_show__id__in=astronomy_shows)
+
         if self.action in ("list", "retrieve"):
             return queryset.select_related()
 
@@ -44,6 +56,10 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
 
 class AstronomyShowViewSet(viewsets.ModelViewSet):
     queryset = AstronomyShow.objects.all()
+
+    @staticmethod
+    def _params_to_ints(query_string):
+        return [int(str_id) for str_id in query_string.split(",")]
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -55,6 +71,13 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
+
+        show_themes = self.request.query_params.get("show_themes")
+
+        if show_themes:
+            show_themes = self._params_to_ints(show_themes)
+            queryset = queryset.filter(show_themes__id__in=show_themes)
+
         if self.action in ("list", "retrieve"):
             return queryset.prefetch_related("show_themes")
 
