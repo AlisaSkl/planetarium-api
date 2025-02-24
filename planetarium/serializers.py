@@ -63,11 +63,9 @@ class ShowSessionListSerializer(ShowSessionSerializer):
         fields = ("id", "astronomy_show", "planetary_dome", "show_time", "seats_available")
 
 
-
-
 class ShowSessionRetrieveSerializer(ShowSessionSerializer):
-    astronomy_show = AstronomyShowSerializer(read_only=True)
-    planetary_dome = PlanetaryDomeSerializer(read_only=True)
+    astronomy_show = AstronomyShowListSerializer(read_only=True)
+    planetary_dome = serializers.CharField(source="planetary_dome.name", read_only=True)
     taken_seats = serializers.SerializerMethodField()
 
     def get_taken_seats(self, obj):
@@ -80,10 +78,10 @@ class ShowSessionRetrieveSerializer(ShowSessionSerializer):
 class TicketSerializer(serializers.ModelSerializer):
     astronomy_show = serializers.CharField(source="show_session.astronomy_show.title", read_only=True)
     planetary_dome = serializers.CharField(source="show_session.planetary_dome.name", read_only=True)
-
+    show_time = serializers.DateTimeField(source="show_session.show_time", read_only=True)
     class Meta:
         model = Ticket
-        fields = ("id", "row", "seat", "show_session", "astronomy_show", "planetary_dome")
+        fields = ("id", "show_session", "show_time", "astronomy_show", "planetary_dome", "row", "seat")
         validators = [
             UniqueTogetherValidator(
                 queryset=Ticket.objects.all(),
