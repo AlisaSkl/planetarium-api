@@ -1,4 +1,5 @@
 from django.db.migrations import serializer
+from django.db.models import F, Count
 from rest_framework import viewsets
 
 from .models import ShowTheme, PlanetaryDome, ShowSession, AstronomyShow, Reservation
@@ -48,7 +49,14 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
             astronomy_shows = self._params_to_ints(astronomy_shows)
             queryset = queryset.filter(astronomy_show__id__in=astronomy_shows)
 
-        if self.action in ("list", "retrieve"):
+        if self.action == "list":
+            queryset = (
+                queryset
+                .select_related("planetary_dome")
+                .annotate(seats_available=F("planetary_dome__rows") * F("planetary_dome__seats_in_row") - Count("tickets"))
+            )
+            return queryset
+        if self.action == "retrieve":
             return queryset.select_related()
 
         return queryset

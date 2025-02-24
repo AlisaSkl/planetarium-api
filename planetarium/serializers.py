@@ -56,6 +56,13 @@ class ShowSessionSerializer(serializers.ModelSerializer):
 class ShowSessionListSerializer(ShowSessionSerializer):
     astronomy_show = serializers.CharField(source="astronomy_show.title", read_only=True)
     planetary_dome = serializers.CharField(source="planetary_dome.name", read_only=True)
+    seats_available = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = ShowSession
+        fields = ("id", "astronomy_show", "planetary_dome", "show_time", "seats_available")
+
+
 
 
 class ShowSessionRetrieveSerializer(ShowSessionSerializer):
