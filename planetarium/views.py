@@ -3,6 +3,7 @@ from django.db.models import F, Count
 from rest_framework import viewsets
 
 from .models import ShowTheme, PlanetaryDome, ShowSession, AstronomyShow, Reservation
+from .permissions import IsAdminOrIfAuthenticatedReadOnly
 from .serializers import (
     ShowThemeSerializer,
     PlanetaryDomeSerializer,
@@ -17,15 +18,18 @@ from .serializers import (
 class ShowThemeViewSet(viewsets.ModelViewSet):
     queryset = ShowTheme.objects.all()
     serializer_class = ShowThemeSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
 class PlanetaryDomeViewSet(viewsets.ModelViewSet):
     queryset = PlanetaryDome.objects.all()
     serializer_class = PlanetaryDomeSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
     queryset = ShowSession.objects.all().select_related()
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     @staticmethod
     def _params_to_ints(query_string):
@@ -64,6 +68,7 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
 
 class AstronomyShowViewSet(viewsets.ModelViewSet):
     queryset = AstronomyShow.objects.all()
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     @staticmethod
     def _params_to_ints(query_string):
@@ -95,6 +100,7 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
+    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
